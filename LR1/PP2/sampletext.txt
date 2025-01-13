@@ -1,4 +1,0 @@
-Hello, world!
-Python programming is fun.
-This is part of our requirement in CPE106L-4 Laboratory Experiment #1
-This is a sample text to test on the main.py for programming problem #2
