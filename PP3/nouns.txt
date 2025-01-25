@@ -1,0 +1,4 @@
+CAT
+DOG
+CAR
+TREE
