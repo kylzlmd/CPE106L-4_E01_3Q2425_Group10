@@ -27,14 +27,14 @@ class User:
     def register(self, username, password, email):
         """Registers a new user with a hashed password and saves to a file."""
         if username in self.users:
-            return "❌ Error: Username already exists!"
+            return "Error: Username already exists!"
         
         self.users[username] = {
             "email": email,
             "password": self.hash_password(password)  # Store hashed password
         }
         self.save_users()  # Save the updated user list
-        return f"✅ User {username} registered successfully!"
+        return f"User {username} registered successfully!"
 
 # Create an instance of User class
 user_system = User()
