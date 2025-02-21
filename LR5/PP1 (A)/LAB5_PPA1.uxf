@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>13</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>312</x>
+      <y>208</y>
+      <w>273</w>
+      <h>234</h>
+    </coordinates>
+    <panel_attributes>Participant
+--
+ParticipantID int (primary key)
+LastName varchar(50)
+FirstName varchar(50)
+Address varchar(100)
+City varchar(50)
+State varchar(50)
+PostalCode varchar(10)
+TeleNumber varchar(15)
+BirthDate date</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>663</x>
+      <y>234</y>
+      <w>273</w>
+      <h>143</h>
+    </coordinates>
+    <panel_attributes>Class
+--
+ClassID int (primary key)
+ClassDescription varchar(255)
+MaxParticipants int
+ClassFee decimal(10,2)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>325</x>
+      <y>637</y>
+      <w>273</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>Enrollment
+--
+EnrollmentID (primary key)
+ParticipantID (foreign key)
+ScheduleID (foreign key)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>663</x>
+      <y>624</y>
+      <w>273</w>
+      <h>117</h>
+    </coordinates>
+    <panel_attributes>ClassSchedule
+--
+ScheduleID int (primary key)
+ClassID int (foreign key)
+ClassDate datetime</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>429</x>
+      <y>429</y>
+      <w>39</w>
+      <h>234</h>
+    </coordinates>
+    <panel_attributes>lt=||-|&lt;</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;160.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>780</x>
+      <y>364</y>
+      <w>39</w>
+      <h>286</h>
+    </coordinates>
+    <panel_attributes>lt=||-|&lt;</panel_attributes>
+    <additional_attributes>10.0;200.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>572</x>
+      <y>286</y>
+      <w>117</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>lt=&gt;|-|&lt;</panel_attributes>
+    <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>585</x>
+      <y>663</y>
+      <w>104</w>
+      <h>39</h>
+    </coordinates>
+    <panel_attributes>lt=||-|&lt;</panel_attributes>
+    <additional_attributes>10.0;10.0;60.0;10.0</additional_attributes>
+  </element>
+</diagram>
