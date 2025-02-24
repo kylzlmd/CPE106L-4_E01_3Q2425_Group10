@@ -1,0 +1,132 @@
+import json
+import hashlib
+import getpass
+from datetime import datetime
+
+class VolunteerManager:
+    def __init__(self):
+        self.hours_logged = {}
+
+    def approve_volunteer(self, username):
+        try:
+            with open("users.json", "r") as file:
+                users = json.load(file)
+        except FileNotFoundError:
+            print("No users found!")
+            return
+
+        for user in users:
+            if user["username"] == username and user["role"] == "volunteer":
+                user["approved"] = True
+                print(f"Volunteer '{username}' approved.")
+                break
+        
+        with open("users.json", "w") as file:
+            json.dump(users, file, indent=4)
+
+    def track_hours(self, username, hours):
+        self.hours_logged[username] = self.hours_logged.get(username, 0) + hours
+        print(f"⏳ {hours} hours logged for {username}.")
+
+    def generate_reports(self):
+        print("📊 Volunteer Participation Report:")
+        for username, hours in self.hours_logged.items():
+            print(f"- {username}: {hours} hours")
+
+    def view_pending_volunteers(self):
+        try:
+            with open("users.json", "r") as file:
+                users = json.load(file)
+        except FileNotFoundError:
+            print("No users found!")
+            return
+        
+        pending = [user for user in users if user["role"] == "volunteer" and not user.get("approved", False)]
+        if not pending:
+            print("No pending volunteers.")
+        else:
+            print("Pending Volunteers:")
+            for user in pending:
+                print(f"- {user['username']} (ID: {user['volunteer_id']})")
+
+class TaskManager:
+    def __init__(self):
+        self.tasks = {}
+
+    def assign_task(self):
+        volunteer_id = input("Enter Volunteer ID: ")
+        task = input("Enter Task Description: ")
+        if volunteer_id not in self.tasks:
+            self.tasks[volunteer_id] = []
+        self.tasks[volunteer_id].append(task)
+        print(f"Task '{task}' assigned to Volunteer {volunteer_id}.")
+
+    def view_tasks(self):
+        volunteer_id = input("Enter Volunteer ID to view tasks: ")
+        tasks = self.tasks.get(volunteer_id, [])
+        if tasks:
+            print(f"Tasks for Volunteer {volunteer_id}:")
+            for task in tasks:
+                print(f"- {task}")
+        else:
+            print("No tasks assigned.")
+
+class PlantManager:
+    def __init__(self):
+        self.plants = {}
+        self.watering_schedule = {}
+    
+    def add_plant(self):
+        plant_name = input("Enter Plant Name: ")
+        self.plants[plant_name] = True
+        print(f"Plant '{plant_name}' added.")
+    
+    def update_watering_schedule(self):
+        plant_name = input("Enter Plant Name: ")
+        schedule = input("Enter Watering Schedule (e.g., daily, weekly): ")
+        self.watering_schedule[plant_name] = schedule
+        print(f"Watering schedule updated for {plant_name}.")
+    
+    def override_watering(self):
+        plant_name = input("Enter Plant Name to Override Watering: ")
+        print(f"Watering manually overridden for {plant_name}.")
+    
+def admin_menu(volunteer_manager, task_manager, plant_manager):
+    while True:
+        print("\n ======Admin Menu======")
+        print("1. View Pending Volunteers")
+        print("2. Approve Volunteer")
+        print("3. Assign Task to Volunteer")
+        print("4. Track Volunteer Hours")
+        print("5. Generate Volunteer Report")
+        print("6. Add Plant")
+        print("7. Update Watering Schedule")
+        print("8. Override Watering")
+        print("9. Logout")
+        choice = input("Enter choice: ")
+
+        if choice == "1":
+            volunteer_manager.view_pending_volunteers()
+        elif choice == "2":
+            username = input("Enter Volunteer Username: ")
+            volunteer_manager.approve_volunteer(username)
+        elif choice == "3":
+            task_manager.assign_task()
+        elif choice == "4":
+            username = input("Enter Volunteer Username: ")
+            hours = int(input("Enter Hours: "))
+            volunteer_manager.track_hours(username, hours)
+        elif choice == "5":
+            volunteer_manager.generate_reports()
+        elif choice == "6":
+            plant_manager.add_plant()
+        elif choice == "7":
+            plant_manager.update_watering_schedule()
+        elif choice == "8":
+            plant_manager.override_watering()
+        elif choice == "9":
+            print("Logging out...")
+            break
+        else:
+            print("Invalid choice!")
+            
