@@ -39,34 +39,16 @@ class User:
         with open(self.filename, "w") as file:
             json.dump(self.users, file, indent=4)
 
-    def register(self, username, password, email):
-        """Registers a new user with a hashed password and saves to a file."""
-        if username in self.users:
-            return "Error: Username already exists!"
-        
-        self.users[username] = {
-            "email": email,
-            "password": self.hash_password(password)  # Store hashed password
-        }
-        self.save_users()  # Save the updated user list
-        return f"User {username} registered successfully!"
-
-# Create an instance of User class
-user_system = User()
 
 # Interactive User Input
 print("🔹 Welcome to the Volunteer Registration System 🔹")
 
 while True:
     print("\n--- Register a New User ---")
-    username = input("Enter a username: ")
-    password = getpass.getpass("Enter a password: ")  # Hidden password input
-    email = input("Enter an email: ")
+    username = input("Enter username: ")
+    password = getpass.getpass("Enter password: ")
+    role = input("Enter role (admin/volunteer): ").lower()
+    user = User(username, password, role)
+    user.register()
+    print("✅ Registration successful!")
 
-    # Register the user and print result
-    print(user_system.register(username, password, email))
-
-    # Ask if they want to register another user
-    another = input("Do you want to register another user? (yes/no): ").strip().lower()
-    if another != "yes":
-        break
