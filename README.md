@@ -2,3 +2,5 @@
 
 Lab Report Codes and Project
 The Lab Report Codes are named "LR" folders.
+
+The instructions of the Project is located inside the "PROJ" folder.
