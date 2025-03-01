@@ -1,9 +1,6 @@
-# CPE106L-4_E01_3Q2425_Group10 and Project Instructions
+# Seedie Project Instructions
 
-Lab Report Codes and Project
-The Lab Report Codes are named "LR" folders.
-
-For the installation of the Project...
+This is the repo of the Group 7 Lab Report and the Seedie Project, located in the **`PROJ`** folder
 
 Open a directory
 python3 -m venv venvs
