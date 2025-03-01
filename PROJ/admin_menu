@@ -3,6 +3,71 @@ import hashlib
 import getpass
 from datetime import datetime
 
+class User:
+    volunteer_id_counter = 1
+    
+    def __init__(self, username, password, role):
+        self.username = username
+        self.password = self.hash_password(password)
+        self.role = role
+        self.volunteer_id = None
+
+    def hash_password(self, password):
+        return hashlib.sha256(password.encode()).hexdigest()
+
+    def register(self):
+        try:
+            with open("users.json", "r") as file:
+                users = json.load(file)
+                if not isinstance(users, list):
+                    users = []
+        except (FileNotFoundError, json.JSONDecodeError):
+            users = []
+        
+        if self.role == "volunteer":
+            self.volunteer_id = self.get_next_volunteer_id(users)
+            user_data = {"username": self.username, "password": self.password, "role": self.role, "volunteer_id": self.volunteer_id, "approved": False}
+        else:
+            user_data = {"username": self.username, "password": self.password, "role": self.role}
+        
+        users.append(user_data)
+        with open("users.json", "w") as file:
+            json.dump(users, file, indent=4)
+        return True
+    
+    def get_next_volunteer_id(self, users):
+        max_id = 0
+        for user in users:
+            if isinstance(user, dict) and "volunteer_id" in user and isinstance(user["volunteer_id"], int):
+                max_id = max(max_id, user["volunteer_id"])
+        return max_id + 1
+
+    @staticmethod
+    def login():
+        try:
+            with open("users.json", "r") as file:
+                users = json.load(file)
+                if not isinstance(users, list):
+                    users = []
+        except (FileNotFoundError, json.JSONDecodeError):
+            print("❌ No users found! Please register first.")
+            return None
+
+        username = input("Enter username: ")
+        password = getpass.getpass("Enter password: ")
+        hashed_password = hashlib.sha256(password.encode()).hexdigest()
+
+        for user in users:
+            if isinstance(user, dict) and "username" in user and "password" in user:
+                if user["username"] == username and user["password"] == hashed_password:
+                    if user["role"] == "volunteer" and not user.get("approved", False):
+                        print("⏳ Your volunteer application is pending approval.")
+                        return None
+                    print("✅ Login successful!")
+                    return user
+        print("❌ Login failed!")
+        return None
+
 class VolunteerManager:
     def __init__(self):
         self.hours_logged = {}
@@ -12,13 +77,13 @@ class VolunteerManager:
             with open("users.json", "r") as file:
                 users = json.load(file)
         except FileNotFoundError:
-            print("No users found!")
+            print("❌ No users found!")
             return
 
         for user in users:
             if user["username"] == username and user["role"] == "volunteer":
                 user["approved"] = True
-                print(f"Volunteer '{username}' approved.")
+                print(f"✅ Volunteer '{username}' approved.")
                 break
         
         with open("users.json", "w") as file:
@@ -38,14 +103,14 @@ class VolunteerManager:
             with open("users.json", "r") as file:
                 users = json.load(file)
         except FileNotFoundError:
-            print("No users found!")
+            print("❌ No users found!")
             return
         
         pending = [user for user in users if user["role"] == "volunteer" and not user.get("approved", False)]
         if not pending:
-            print("No pending volunteers.")
+            print("✅ No pending volunteers.")
         else:
-            print("Pending Volunteers:")
+            print("⏳ Pending Volunteers:")
             for user in pending:
                 print(f"- {user['username']} (ID: {user['volunteer_id']})")
 
@@ -59,17 +124,17 @@ class TaskManager:
         if volunteer_id not in self.tasks:
             self.tasks[volunteer_id] = []
         self.tasks[volunteer_id].append(task)
-        print(f"Task '{task}' assigned to Volunteer {volunteer_id}.")
+        print(f"✅ Task '{task}' assigned to Volunteer {volunteer_id}.")
 
     def view_tasks(self):
         volunteer_id = input("Enter Volunteer ID to view tasks: ")
         tasks = self.tasks.get(volunteer_id, [])
         if tasks:
-            print(f"Tasks for Volunteer {volunteer_id}:")
+            print(f"📋 Tasks for Volunteer {volunteer_id}:")
             for task in tasks:
                 print(f"- {task}")
         else:
-            print("No tasks assigned.")
+            print("❌ No tasks assigned.")
 
 class PlantManager:
     def __init__(self):
@@ -79,21 +144,54 @@ class PlantManager:
     def add_plant(self):
         plant_name = input("Enter Plant Name: ")
         self.plants[plant_name] = True
-        print(f"Plant '{plant_name}' added.")
+        print(f"✅ Plant '{plant_name}' added.")
     
     def update_watering_schedule(self):
         plant_name = input("Enter Plant Name: ")
         schedule = input("Enter Watering Schedule (e.g., daily, weekly): ")
         self.watering_schedule[plant_name] = schedule
-        print(f"Watering schedule updated for {plant_name}.")
+        print(f"✅ Watering schedule updated for {plant_name}.")
     
     def override_watering(self):
         plant_name = input("Enter Plant Name to Override Watering: ")
-        print(f"Watering manually overridden for {plant_name}.")
-    
+        print(f"🚰 Watering manually overridden for {plant_name}.")
+
+# -------- MENU SYSTEM --------
+def main_menu():
+    volunteer_manager = VolunteerManager()
+    task_manager = TaskManager()
+    plant_manager = PlantManager()
+    while True:
+        print("\n🌿 Volunteer Management System 🌿")
+        print("1. Register")
+        print("2. Login")
+        print("3. Exit")
+        choice = input("Enter choice: ")
+
+        if choice == "1":
+            username = input("Enter username: ")
+            password = getpass.getpass("Enter password: ")
+            role = input("Enter role (admin/volunteer): ").lower()
+            user = User(username, password, role)
+            user.register()
+            print("✅ Registration successful!")
+
+        elif choice == "2":
+            user_data = User.login()
+            if user_data:
+                if user_data["role"] == "admin":
+                    admin_menu(volunteer_manager, task_manager, plant_manager)
+                else:
+                    volunteer_menu(user_data["username"], volunteer_manager)
+        elif choice == "3":
+            print("👋 Exiting...")
+            break
+        else:
+            print("❌ Invalid choice! Please try again.")
+
 def admin_menu(volunteer_manager, task_manager, plant_manager):
     while True:
-        print("\n ======Admin Menu======")
+        print("\n🔧 Admin Menu")
         print("1. View Pending Volunteers")
         print("2. Approve Volunteer")
         print("3. Assign Task to Volunteer")
@@ -125,8 +223,29 @@ def admin_menu(volunteer_manager, task_manager, plant_manager):
         elif choice == "8":
             plant_manager.override_watering()
         elif choice == "9":
-            print("Logging out...")
+            print("👋 Logging out...")
             break
         else:
-            print("Invalid choice!")
+            print("❌ Invalid choice!")
             
+
+def volunteer_menu(username, volunteer_manager):
+    while True:
+        print("\n🤝 Volunteer Menu")
+        print("1. Log Hours")
+        print("2. View Reports")
+        print("3. Logout")
+        choice = input("Enter choice: ")
+
+        if choice == "1":
+            hours = int(input("Enter Hours: "))
+            volunteer_manager.track_hours(username, hours)
+        elif choice == "2":
+            volunteer_manager.generate_reports()
+        elif choice == "3":
+            print("👋 Logging out...")
+            break
+        else:
+            print("❌ Invalid choice!")
+# Run the program
+main_menu()
