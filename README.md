@@ -37,7 +37,7 @@ sudo apt install -y curl
 
 ---
 
-## 📌 4. Installing Mongosh (MongoDB Shell)  
+## 📌 4. Installing Mongosh (MongoDB Shell)  [OPTIONAL!!!!]
 
 ### 🔹 For Ubuntu Jammy (22.04)  
 
