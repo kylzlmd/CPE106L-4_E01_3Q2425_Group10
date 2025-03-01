@@ -50,5 +50,5 @@ while True:
     role = input("Enter role (admin/volunteer): ").lower()
     user = User(username, password, role)
     user.register()
-    print("✅ Registration successful!")
+    print("Registration successful!")
 
