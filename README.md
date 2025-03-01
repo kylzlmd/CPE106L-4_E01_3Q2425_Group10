@@ -66,7 +66,7 @@ mongosh --version
 Once everything is installed, you can run the app using:  
 
 ```bash
-python3 seedApp.py
+python seedApp.py
 ```
 
 Now, you're all set to start using **Seedie Project**! 🚀  
