@@ -1,12 +1,5 @@
 # CPE106L-4_E01_3Q2425_Group10
 
-## Lab Report Codes and Project Instructions
-
-### Lab Report Codes
-The Lab Report Codes are stored in the `LR` folders.
-
----
-
 ## Project Installation Guide
 
 ### 1. Setting Up the Virtual Environment
@@ -72,4 +65,4 @@ mongosh --version
 pip install flet==0.19.0
 ```
 
-Now, your project should be fully set up and ready to use!
+Now, your project should be fully set up and ready to use.
