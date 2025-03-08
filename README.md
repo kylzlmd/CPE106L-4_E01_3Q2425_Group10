@@ -23,6 +23,7 @@ Install the required Python packages:
 pip install flet==0.19.0
 pip install uvicorn
 pip install "fastapi[standard]"
+pip install pymongo
 ```
 
 ---
@@ -63,10 +64,16 @@ mongosh --version
 
 ## 📌 5. Running the Application  
 
-Once everything is installed, you can run the app using:  
+Start the **backend API** using FastAPI and Uvicorn:
 
 ```bash
-python seedApp.py
+uvicorn backend:app --reload
+```
+
+Then, in another terminal, start the **frontend UI**:
+
+```bash
+python frontend.py
 ```
 
 Now, you're all set to start using **Seedie Project**! 🚀  
