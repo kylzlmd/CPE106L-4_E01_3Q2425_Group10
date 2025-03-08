@@ -73,7 +73,7 @@ uvicorn backend:app --reload
 Then, in another terminal, start the **frontend UI**:
 
 ```bash
-python frontend.py
+python app.py
 ```
 
 Now, you're all set to start using **Seedie Project**! 🚀  
