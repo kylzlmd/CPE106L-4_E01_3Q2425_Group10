@@ -70,10 +70,10 @@ Start the **backend API** using FastAPI and Uvicorn:
 uvicorn backend:app --reload
 ```
 
-Then, in another terminal, start the **frontend UI**:
+Then, in another terminal, navigate to the project folder, make the same ```venvs``` environment in the ```FletApp``` folder, and start the **frontend UI** with:
 
 ```bash
 python app.py
 ```
 
-Now, you're all set to start using **Seedie Project**! 🚀  
+Now, you're all set to start using **Seedie Project**! 
