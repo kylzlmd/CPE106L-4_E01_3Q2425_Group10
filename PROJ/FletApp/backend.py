@@ -2,8 +2,13 @@ from fastapi import FastAPI
 from pymongo import MongoClient
 from pydantic import BaseModel
 import random  # Import for random selection
+import requests # for the weather
 
 app = FastAPI()
+
+# weather api data reciever
+WEATHER_API_KEY = "b742978032940364a419eb9ab1de7a51"
+WEATHER_API_URL = "https://api.openweathermap.org/data/2.5/weather"
 
 # Connect to MongoDB
 MONGO_URI = "mongodb+srv://jom:jom123@irricluster.dkeaq.mongodb.net/?retryWrites=true"
@@ -30,6 +35,52 @@ class Schedule(BaseModel):
 PLANT_COLORS = ["Red", "Orange", "Yellow", "Green", "Blue", "Violet"]
 PLANT_SPECIES = ["Coleus", "Dianthus", "Penstemon", "Sedum", "Lamium"]
 
+
+def get_weather_data():
+    api_key = WEATHER_API_KEY
+    city = "Manila"
+    url = f"http://api.openweathermap.org/data/2.5/forecast?q={city}&appid={api_key}&units=metric"
+    
+    response = requests.get(url)
+    data = response.json()
+    
+    return data
+
+
+# get the weather function
+@app.get("/get-weather/{location}")
+def get_weather(location: str):
+    params = {"q": location, "appid": WEATHER_API_KEY, "units": "metric"}
+    response = requests.get(WEATHER_API_URL, params=params)
+    if response.status_code == 200:
+        data = response.json()
+        return {"temperature": data["main"]["temp"], "condition": data["weather"][0]["description"]}
+    return {"error": "Could not fetch weather data"}
+
+@app.get("/weather")
+def weather():
+    data = get_weather_data()
+    # Extract temperature data for the next 7 days (or as required)
+    temperatures = [item['main']['temp'] for item in data['list'][:7]]
+    days = [item['dt_txt'].split(' ')[0] for item in data['list'][:7]]  # Dates for the next 7 days
+    
+    return {"temperatures": temperatures, "days": days}
+
+
+@app.get("/get-all-plants-by-species")
+def get_all_plants_by_species():
+    all_plants = list(plants_collection.find({}, {"_id": 0}))
+    sorted_plants = sorted(all_plants, key=lambda p: p["species"].lower())
+    return {"plants": sorted_plants}
+
+@app.get("/get-all-plants-by-color")
+def get_all_plants_by_color():
+    all_plants = list(plants_collection.find({}, {"_id": 0}))
+    color_order = ["Red", "Orange", "Yellow", "Green", "Blue", "Violet"]
+    sorted_plants = sorted(all_plants, key=lambda p: color_order.index(p["color"]))
+    return {"plants": sorted_plants}
+
+      
 # Register a new user
 @app.post("/register")
 def register_user(user: User):
@@ -116,6 +167,21 @@ def water_seed(username: str):
         return {"message": "Your seed has grown to the next stage!"}
 
     return {"message": "You watered your seed!"}
+
+# Get all plants from all users (Admin only)
+@app.get("/get-all-plants")
+def get_all_plants():
+    all_plants = []
+    users = users_collection.find({}, {"_id": 0, "username": 1})  # Get all users
+    for user in users:
+        username = user["username"]
+        plants = plants_collection.find({"username": username}, {"_id": 0, "color": 1, "species": 1})
+        for plant in plants:
+            plant["username"] = username  # Add username to identify which user owns the plant
+            all_plants.append(plant)
+    return {"plants": all_plants}
+
+
 
 # Fertilize seed
 @app.post("/fertilize-seed/{username}")
