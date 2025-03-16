@@ -1,4 +1,4 @@
-# 🌱 Seedie Project - Installation Guide
+# 🌱 Seedie Project - Installation Guide - LINUX ONLY
 
 Welcome to the **Seedie Project**!  
 All installation files are located in **`PROJ/FletApp`**.
@@ -24,6 +24,7 @@ pip install flet==0.19.0
 pip install uvicorn
 pip install "fastapi[standard]"
 pip install pymongo
+pip install requests
 ```
 
 ---
