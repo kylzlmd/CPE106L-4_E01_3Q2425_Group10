@@ -71,6 +71,11 @@ Start the **backend API** using FastAPI and Uvicorn:
 uvicorn backend:app --reload
 ```
 
+(If you're not using the Python virtual environment, run the code by using)
+```bash
+python -m uvicorn backend:app --reload
+```
+
 Then, in another terminal, navigate to the project folder, make the same ```venvs``` environment in the ```FletApp``` folder, and start the **frontend UI** with:
 
 ```bash
