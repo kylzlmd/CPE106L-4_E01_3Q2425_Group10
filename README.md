@@ -2,6 +2,7 @@
 
 Welcome to the **Seedie Project**!  
 All installation files are located in **`PROJ/FletApp`**.
+..Or, you can go to Releases "The App" and download the ```PROJ.zip``` file.
 
 ---
 
