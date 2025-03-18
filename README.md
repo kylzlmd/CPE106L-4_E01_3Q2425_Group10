@@ -6,12 +6,18 @@ All installation files are located in **`PROJ/FletApp`**.
 ---
 
 ## 📌 1. Setting Up the Virtual Environment  
-Open a terminal and navigate to the **FletApp** directory:  
+In Linux, Open a terminal and navigate to the **FletApp** directory:  
 
 ```bash
 cd PROJ/FletApp
 python3 -m venv venvs
 source venvs/bin/activate
+```
+In Windows:
+```bash
+cd PROJ/FletApp
+python3 -m venv venvs
+venvs\Scripts\activate
 ```
 
 ---
