@@ -35,7 +35,7 @@ pip install requests
 
 ---
 
-## 📌 3. Installing Additional Tools  
+## 📌 3. Installing Additional Tools  [Optional]
 
 If you need `curl`, install it with:
 
@@ -45,7 +45,7 @@ sudo apt install -y curl
 
 ---
 
-## 📌 4. Installing Mongosh (MongoDB Shell)  [OPTIONAL!!!!]
+## 📌 4. Installing Mongosh (MongoDB Shell)  [OPTIONAL also]
 
 ### 🔹 For Ubuntu Jammy (22.04)  
 
