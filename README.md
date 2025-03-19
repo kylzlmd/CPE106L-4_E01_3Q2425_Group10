@@ -32,6 +32,7 @@ pip install uvicorn
 pip install "fastapi[standard]"
 pip install pymongo
 pip install requests
+pip install matplotlib
 ```
 
 ---
