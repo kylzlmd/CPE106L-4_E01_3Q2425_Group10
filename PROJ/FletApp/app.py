@@ -1,5 +1,6 @@
 import flet as ft
 import httpx  # HTTP client for FastAPI requests
+import base64
 
 
 
@@ -52,6 +53,25 @@ def main(page: ft.Page):
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER
             )
         )
+
+# volunteer
+def show_volunteer_seed_chart(page):
+    """Fetch and display the volunteer seed chart."""
+    page.clean()  # Clear the admin menu for space
+    response = httpx.get(f"{API_URL}/volunteer-seed-chart").json()
+
+    if "image" in response:
+        img_data = base64.b64decode(response["image"])
+        with open("volunteer_chart.png", "wb") as f:
+            f.write(img_data)
+        page.add(ft.Image(src="volunteer_chart.png", width=400, height=400))
+    else:
+        page.add(ft.Text("No data available for the chart."))
+
+    page.add(ft.ElevatedButton("🔙 Back to Admin Dashboard", on_click=lambda e: open_dashboard(page, "admin")))
+    page.update()
+
+
 
 def assign_schedule_ui(page):
     username_field = ft.TextField(label="Volunteer Username")
@@ -339,6 +359,7 @@ def open_dashboard(page, username):
                         ft.ElevatedButton("Plot All Gardens by Species 🐝", on_click=lambda e: plot_all_gardens(page, sort_by_species=True)),
                         ft.ElevatedButton("Plot All Gardens by Color 🎨", on_click=lambda e: plot_all_gardens(page, sort_by_species=False)),
                         users_list,
+                        ft.ElevatedButton("📊 Show Volunteer Seed Chart", on_click=lambda e: show_volunteer_seed_chart(page)),
                         ft.ElevatedButton("🚪 Logout", on_click=logout)
                     )
         else:

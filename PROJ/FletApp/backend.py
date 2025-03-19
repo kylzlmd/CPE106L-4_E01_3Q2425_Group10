@@ -3,6 +3,9 @@ from pymongo import MongoClient
 from pydantic import BaseModel
 import random  # Import for random selection
 import requests # for the weather
+import matplotlib.pyplot as plt
+import io
+import base64
 
 app = FastAPI()
 
@@ -56,6 +59,30 @@ def get_weather(location: str):
         data = response.json()
         return {"temperature": data["main"]["temp"], "condition": data["weather"][0]["description"]}
     return {"error": "Could not fetch weather data"}
+
+
+
+#volunteer seed maybe
+@app.get("/volunteer-seed-chart")
+def get_volunteer_seed_chart():
+    users = list(users_collection.find({"username": {"$ne": "admin"}}, {"_id": 0, "username": 1, "seeds": 1}))  # Exclude admin
+    usernames = [user["username"] for user in users]
+    seed_counts = [user["seeds"] for user in users]
+    
+    if not usernames or sum(seed_counts) == 0:
+        return {"error": "No data available for the chart."}
+    
+    plt.figure(figsize=(6, 6))
+    plt.pie(seed_counts, labels=usernames, autopct="%1.1f%%", startangle=140, colors=plt.cm.Paired.colors)
+    plt.title("Volunteer Seed Distribution")
+    
+    buf = io.BytesIO()
+    plt.savefig(buf, format="png")
+    plt.close()
+    buf.seek(0)
+    encoded_image = base64.b64encode(buf.read()).decode()
+    
+    return {"image": encoded_image}
 
 @app.get("/weather")
 def weather():
