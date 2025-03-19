@@ -1,4 +1,4 @@
-# 🌱 Seedie Project - Installation Guide - Windows and Linux
+# 🌱 Seedie Project - Installation Guide - Windows and Linux [Linux Recommended]
 
 Welcome to the **Seedie Project**!  
 All installation files are located in **`PROJ/FletApp`**.
