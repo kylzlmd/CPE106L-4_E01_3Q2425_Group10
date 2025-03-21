@@ -37,7 +37,7 @@ pip install matplotlib
 
 ---
 
-## 📌 3. Installing Additional Tools  [Optional]
+## 📌 3. Installing Additional Tools  [Optional for Linux]
 
 If you need `curl`, install it with:
 
@@ -47,7 +47,7 @@ sudo apt install -y curl
 
 ---
 
-## 📌 4. Installing Mongosh (MongoDB Shell)  [OPTIONAL also]
+## 📌 4. Installing Mongosh (MongoDB Shell)  [OPTIONAL also for Linux Ubuntu]
 
 ### 🔹 For Ubuntu Jammy (22.04)  
 
